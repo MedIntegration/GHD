@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G H D</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="~/img/favicon.ico" type="image/x-icon" rel="shortcut icon" />
+    <link href="~/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700" rel="stylesheet">
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/animate.css" rel="stylesheet" />
+    <link href="~/Content/carousel.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <title>@ViewBag.Title - GHD  </title>
+
+    @Styles.Render("~/Content/css")
+
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div id="wrapper">
+        <div class="topbar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 hidden-xs">
+                        <nav class="topbar-menu">
+                            <ul class="list-inline">
+                                <li>Follow us: </li>
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <nav class="topbar-menu">
+                            <ul class="list-inline text-right navbar-right">
+                                @*<li class="dropdown">
+                                    <img src="~/img/tw.png" alt="">
+                                    @Html.ActionLink("中文", "Change", "Language", new { LanguageAbb = "zh-cn" }, null)
+                                    ／
+                                    <img src="~/img/us.png" />
+                                    @Html.ActionLink("English", "Change", "Language", new { LanguageAbb = "en" }, null)
+                                </li>*@
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <img src="images/us.png" alt=""> English
+                                        <span class="fa fa-angle-down"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><img src="~/img/tw.png" alt="">@Html.ActionLink("中文", "Change", "Language", new { LanguageAbb = "zh-cn" }, null)</li>
+                                        <li><img src="~/img/us.png" alt=""> @Html.ActionLink("English", "Change", "Language", new { LanguageAbb = "en" }, null)</li>
+                                        <li><a href="#"><img src="images/it.png" alt=""> Italian</a></li>
+                                        <li><a href="#"><img src="images/ae.png" alt=""> Arabic</a></li>
+                                        <li><a href="#"><img src="images/de.png" alt=""> German</a></li>
+                                    </ul>
+                                </li>
+                                <li class="hidden-xs"><i class="fa fa-clock-o"></i> 08:00 - 17:00</li>
+                                <li><i class="fa fa-phone"></i> +886 9XX XXX XXX </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back-to-top"></div>
+    <header class="header site-header">
+        <div class="container">
+            <nav class="navbar navbar- yamm">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="~/Views/Home/Index.cshtml"><img src="~/img/logo.png" alt="Linda" /></a>
+                    </div>
+                    <div id="navbar" class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-right">         
+                            <li class="active"><a href="@Url.Action("Index", "Home")" class="nav-link">首頁 </a></li>
+                            <li class="dropdown yamm-fw hasmenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">數據 <span class="fa fa-angle-down"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="yamm-content">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <ul>
+                                                        <li><a href="service-01.html">SEO Consultants</a></li>
+                                                        <li><a href="service-02.html">SEO Audits</a></li>
+                                                        <li><a href="service-03.html">SEO Packages & Plans</a></li>
+                                                        <li><a href="service-04.html">Web Copywriting</a></li>
+                                                        <li><a href="service-05.html">SEO Copywriting</a></li>
+                                                        <li><a href="service-06.html">Keyword Research</a></li>
+                                                        <li><a href="service-07.html">SEO Strategy</a></li>
+                                                        <li><a href="service-08.html">Website Design</a></li>
+                                                        <li><a href="service-09.html">Link Building Services</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <ul>
+                                                        <li><a href="page-services.html">All Services</a></li>
+                                                        <li><a href="page-pricing.html">Pricing & Plans</a></li>
+                                                        <li><a href="page-clients.html">Our Clients</a></li>
+                                                        <li><a href="page-testimonials.html">Testimonials</a></li>
+                                                        <li><a href="page-ebooks.html">Free E-Books</a></li>
+                                                        <li><a href="page-seo-analysis.html">SEO Analysis</a></li>
+                                                        <li><a href="case-studies.html">Case Studies</a></li>
+                                                        <li><a href="case-studies-alt.html">Case Studies Alt</a></li>
+                                                        <li><a href="case-studies-single.html">Case Studies Single</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <ul>
+                                                        <li><a href="blog.html">Blog & News</a></li>
+                                                        <li><a href="blog-alt.html">Blog Alternative</a></li>
+                                                        <li><a href="blog-single.html">Single Blog</a></li>
+                                                        <li><a href="page.html">Default Page</a></li>
+                                                        <li><a href="page-fullwidth.html">Fullwidth Page</a></li>
+                                                        <li><a href="page-contact.html">Contact us</a></li>
+                                                        <li><a href="page-contact-alt.html">Contact Alternative</a></li>
+                                                        <li><a href="page-faqs.html">FAQ's Page</a></li>
+                                                        <li><a href="page-not-found.html">404 Not Found</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="page-about.html">關於我們</a></li>
+                            <li><a href="case-studies.html">最新消息</a></li>
+                            <li><a href="blog.html">幫助</a></li>
+                            <li><a href="page-contact.html">聯絡我們</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    @RenderBody()
+    <footer class="footer primary-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-4">
+                    <div class="widget clearfix">
+                        <h4 class="widget-title">Subscribe</h4>
+                        <div class="newsletter-widget">
+                            <p>You can opt out of our newsletters at any time. See our privacy policy.</p>
+                            <form class="form-inline" role="search">
+                                <div class="form-1">
+                                    <input type="text" class="form-control" placeholder="Enter email here..">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <div class="widget clearfix">
+                        <h4 class="widget-title">Company</h4>
+                        <ul>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Carrier</a></li>
+                            <li><a href="#">Trademark</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <div class="widget clearfix">
+                        <h4 class="widget-title">Services</h4>
+                        <ul>
+                            <li><a href="#">Design & Dev</a></li>
+                            <li><a href="#">ASP.NET</a></li>
+                            <li><a href="#">PHP Development</a></li>
+                            <li><a href="#">Mobile App</a></li>
+                            <li><a href="#">Oracle</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <div class="widget clearfix">
+                        <h4 class="widget-title">Download</h4>
+                        <ul>
+                            <li><a href="#">MAC/OSX</a></li>
+                            <li><a href="#">Android</a></li>
+                            <li><a href="#">Windows</a></li>
+                            <li><a href="#">Google Play</a></li>
+                            <li><a href="#">Amazon</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <div class="widget clearfix">
+                        <h4 class="widget-title">Be Social</h4>
+                        <ul>
+                            <li><a href="#">Facebook</a></li>
+                            <li><a href="#">Twitter</a></li>
+                            <li><a href="#">Google+</a></li>
+                            <li><a href="#">Linkedin</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/parallax.js"></script>
+    <script src="~/Scripts/animate.js"></script>
+    <script src="~/Scripts/owl.carousel.js"></script>
+    <script src="~/Scripts/custom.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
