@@ -1,0 +1,411 @@
+﻿
+@{
+    ViewBag.Title = "Indiv";
+}
+@*<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">*@
+<style type="text/css">
+    body {
+        height: auto;
+        overflow: auto
+    }
+
+    .card {
+        background-color: #ffffff;
+        border: 1px solid rgba(0, 34, 51, 0.1);
+        box-shadow: 2px 4px 10px 0 rgba(0, 34, 51, 0.05), 2px 4px 10px 0 rgba(0, 34, 51, 0.05);
+        border-radius: 0.15rem;
+    }
+
+    /* Tabs Card */
+
+    .tab-card {
+        border: 1px solid #eee;
+    }
+
+    .tab-card-header {
+        background: none;
+    }
+
+        /* Default mode */
+        .tab-card-header > .nav-tabs {
+            border: none;
+            margin: 0px;
+        }
+
+            .tab-card-header > .nav-tabs > li {
+                margin-right: 2px;
+            }
+
+                .tab-card-header > .nav-tabs > li > a {
+                    border: 0;
+                    border-bottom: 2px solid transparent;
+                    margin-right: 0;
+                    color: #737373;
+                    padding: 2px 15px;
+                }
+
+                    .tab-card-header > .nav-tabs > li > a.show {
+                        border-bottom: 2px solid #007bff;
+                        color: #007bff;
+                    }
+
+                    .tab-card-header > .nav-tabs > li > a:hover {
+                        color: #007bff;
+                    }
+
+        .tab-card-header > .tab-content {
+            padding-bottom: 0;
+        }
+</style>
+
+<div class="container">
+    <!--這是標頭-->
+    <!--<script src="HDRheader.js"></script>-->
+    @*<script src="~/Scripts/HDRheader.js"></script>*@
+    <br>
+
+    <div class="row">
+        <div class="col">
+
+                <br><br>
+                <!--標籤也在切換時直接重新寫入iframe標籤就不會造成新頁面問題-->
+                <div id="page_container">
+
+                </div>
+            
+        </div>
+    </div>
+</div>
+@section scripts
+    {
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+    <script src="~/Scripts/crossfilter.js"></script>
+    <script src="~/Scripts/d3.js"></script>
+    <script src="~/Scripts/dc.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/circles/0.0.6/circles.min.js"></script>
+
+
+
+
+
+
+    <script type="text/javascript">
+
+        var getUrlString = location.href;
+        var url = new URL(getUrlString);
+        var i = url.searchParams.get('id');
+        var about = "";
+        var collections = "";
+        var related_resources = "";
+        var data_utility = "";
+        var discussion = "";
+        var technical_detail = "";
+
+
+        d3.csv("../../data.csv").then(function (data) {
+
+
+            var ndx = crossfilter(data);
+            var letterDimension2 = ndx.dimension(function (d) {
+                return d;
+            });
+
+            var dd = letterDimension2.top(Infinity);
+            //資料集標題來源圖片及評分和標籤切換
+            var inhtml = `<br><br><div class="panel panel-default" id="card${i}">
+                                        <div class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-md-2" style="text-align:left;">
+                                                        <img src="${dd[i].來源單位Logo}" width="70px" height="70px">
+                                                </div>
+                                                <div class="col-md-8">
+                                                        <h4><label class="f-w-700">${dd[i].資料集標題}</label></h4>
+                                                        <img src="${dd[i].認證徽章}" width="20px"><a>${dd[i].資料集來源}</a>
+                                                </div>
+                                                <div class="col-md-2" style="text-align:right;">
+
+                                                    <div id="circles-1">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <span class="badge text-bg-secondary">${dd[i].資料集Tag}</span>
+                                            <p>觀看次數:${dd[i].觀看次數}</p>
+
+                                            <div class="card mt-3 tab-card">
+                                                <div class="card-header tab-card-header">
+                                                    <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="one-tab" name="about" data-toggle="tab" role="tab" aria-controls="One" aria-selected="true">關於(About)</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="two-tab" name="technical_detail" data-toggle="tab" role="tab" aria-controls="Two" aria-selected="false">細節(Technical detail)</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="three-tab" name="data_utility" data-toggle="tab" role="tab" aria-controls="Three" aria-selected="false">資料效用(Data utility)</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="four-tab" name="discussion" data-toggle="tab" role="tab" aria-controls="Four" aria-selected="false">討論(Discussion)</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="five-tab" name="related_resources" data-toggle="tab" role="tab" aria-controls="Five" aria-selected="false">相關資源(Related resources)</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="six-tab" name="collections" data-toggle="tab" role="tab" aria-controls="Six" aria-selected="false">收錄(Collections)</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+
+            //插入到.col開頭
+            $(".col").prepend(inhtml);
+
+            //每個標籤頁的內容
+            about = `<div class="panel panel-default" id="card_about${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>摘要Abstract</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            
+                                            <p>${dd[i].摘要Abstract}</p>
+                                            
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="panel panel-default" id="card_about${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>細項(Details)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                       
+                                                    
+                                                    <p>數位物件識別碼DOI:${dd[i].數位物件識別碼DOI_for_元數據_not_paper}</p>
+                                                    <p>最新資料集發布日期:${dd[i].最新資料集發布日期Latest_dataset_release_date}</p>
+                                                    <p>發布頻率:${dd[i].發布頻率Publishing_frequency}</p>
+                                                    <p>創建日期:${dd[i].創建日期Creation_Date}</p>
+                                                    <p>最後更新時間:${dd[i].最後更新時間Last_updated}</p>
+                                                    <p>版本:${dd[i].版本_Version}</p>
+                                                    <p>資源創建者單位:${dd[i].資源創建者單位Resource_creator}</p>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="panel panel-default" id="card_about${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>涵蓋範圍(Coverage)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                                    
+                                                    <p>資料集延遲:${dd[i].資料集延遲Dataset_time_lag}</p>
+                                                    <p>涵蓋區域:${dd[i].涵蓋區域Geographical_coverage}</p>
+                                                    <p>年齡區間:${dd[i].年齡區間Typical_age_range}</p>
+                                                    <p>物理樣本:${dd[i].物理樣本Physical_sample_availability}</p>
+                                                    <p>隨訪期:${dd[i].隨訪期Follow_up}</p>
+                                                    <p>途徑:${dd[i].途徑Pathway}</p>
+                                            
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="panel panel-default" id="card_about${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>格式與標準(Formats and standards)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                           
+                                                    
+                                                    <p>語義註釋:${dd[i].語義註釋Semantic_Annotations}</p>
+                                                    <p>數據模型:${dd[i].數據模型Data_models}</p>
+                                                    <p>語言:${dd[i].語言Language}</p>
+                                                    <p>格式:${dd[i].格式Format}</p>
+                                            
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="panel panel-default" id="card_about${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>出處(Provenance)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            
+                                                    
+                                                    <p>目的:${dd[i].目的Purpose}</p>
+                                                    <p>來源:${dd[i].來源Source}</p>
+                                                    <p>蒐集情境:${dd[i].蒐集情境Collection_situation}</p>
+                                                    <p>派生分化:${dd[i].派生分化Derived_from}</p>
+                                            
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="panel panel-default" id="card_about${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>觀察(Observations)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                           
+                                                    
+                                                    <p>統計人口:${dd[i].統計人口Statistical_population}</p>
+                                                    <p>人口描述:${dd[i].人口描述Population_description}</p>
+                                                    <p>人口規模:${dd[i].人口規模Population_size}</p>
+                                                    <p>測量屬性:${dd[i].測量屬性Measured_property}</p>
+                                                    <p>觀察日期:${dd[i].觀察日期Observation_date}</p>
+                                            
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="panel panel-default" id="card_about${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>數據訪問請求(Data access request)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            
+                                                    
+                                                    <p>訪問訊息:${dd[i].訪問訊息Access_information}</p>
+                                                    <p>處裡時間:${dd[i].處裡時間Processing_time}</p>
+                                                    <p>訪問請求成本:${dd[i].訪問請求成本Access_request_cost}</p>
+                                                    <p>訪問環境:${dd[i].訪問環境Access_environment}</p>
+                                                    <p>管轄權:${dd[i].管轄權Jurisdiction}</p>
+                                                    <p>限制:${dd[i].限制Limitations}</p>
+                                                    <p>要求:${dd[i].要求Requirements}</p>
+                                                    <p>數據控制者:${dd[i].數據控制者Data_Controller}</p>
+                                                    <p>數據處裡者:${dd[i].數據處裡者Data_Processor}</p>
+                                            
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="panel panel-default" id="card_about${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>相關資源(Related resources)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                           
+                                                    
+                                                    <p>論文:${dd[i].論文Papers}</p>
+                                                    <p>計畫項目:${dd[i].計畫項目Projects}</p>
+                                                    <p>工具:${dd[i].工具Tools}</p>
+                                            
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="panel panel-default" id="card_about${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>已鏈接的數據集(Linked datasets)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                           
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                    <br><br></div>`;
+
+            data_utility = `<div class="panel panel-default" id="card_Data_utility${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>資料效用(Data utility)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            
+                                            
+                                        </div>
+                                    
+                                    <br><br>`;
+
+
+            discussion = `
+                        <div class="panel panel-default" id="card_Discussion${i}">
+                                        <div class="panel-heading">
+
+                                            <h5><p>討論(Discussion)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            
+                                            <div class="mb-3">
+                                                        <label for="exampleFormControlInput1" class="form-label">電子郵件位置</label>
+                                                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                                            </div>
+                                            <div class="mb-3">
+                                                        <label for="exampleFormControlTextarea1" class="form-label">留言區</label>
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <br><br>`;
+
+            related_resources = `<div class="panel panel-default" id="card_Related_resources${i}">
+                                        <div class="panel-heading">
+                                             <h5><p>相關資源(Related resources)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                           
+                                        </div>
+                                    </div>
+                                    <br><br>`;
+
+
+            collections = `<div class="panel panel-default" id="card_Collections${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>收錄(Collections)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            
+                                        </div>
+                                    </div>
+                                    <br><br>`;
+
+
+            technical_detail = `
+                        <div class="panel panel-default" id="card_Technical_detail${i}">
+                                        <div class="panel-heading">
+                                            <h5><p>細節(Technical detail)</p></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            
+                                        </div>
+                                    </div>
+                                    <br><br>`;
+
+            //評分動畫
+            Circles.create({
+                id: 'circles-1',
+                radius: 40,
+                value: dd[i].資料集豐富度評分,
+                maxValue: 100,
+                width: 10,
+                text: function (value) { return value; },
+                colors: ['#D3B6C6', '#4B253A'],
+                duration: 400,
+                wrpClass: 'circles-wrp',
+                textClass: 'circles-text',
+                valueStrokeClass: 'circles-valueStroke',
+                maxValueStrokeClass: 'circles-maxValueStroke',
+                styleWrapper: true,
+                styleText: true
+            });
+
+            container.innerHTML = about;
+
+        });
+        //標籤頁切換
+        var container = document.getElementById("page_container")
+        $(document).on('click', "a[class='nav-link']", function (e) {
+            //將內容切換到對應變數名之html
+            container.innerHTML = eval($(this).attr("name"));
+            //將被點擊以外的標籤樣式設為none
+            $(this).parent().siblings().children().css("border-style", "none");
+            //將被點擊的標籤樣式設為有底線
+            $(this).parent().siblings().children().css
+            $(this).css({ "border-bottom-style": "groove", "border-color": "#737373" });
+        });
+
+
+    </script>
+
+}

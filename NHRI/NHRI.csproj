@@ -201,6 +201,7 @@
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\style.css" />
+    <Content Include="database.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\flaticon.css" />
     <Content Include="fonts\Flaticon.svg" />
@@ -238,9 +239,14 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="data.csv" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\crossfilter.js" />
     <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\d3.js" />
+    <Content Include="Scripts\dc.js" />
     <Content Include="Scripts\gallery_04.js" />
+    <Content Include="Scripts\HDRheader.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -257,6 +263,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\owl.carousel.js" />
     <Content Include="Scripts\parallax.js" />
+    <Content Include="shield.png" />
     <Content Include="upload\about.jpg" />
     <Content Include="upload\about_02.jpg" />
     <Content Include="upload\bg_01.jpg" />
@@ -414,6 +421,9 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Home\Data_home.cshtml" />
+    <Content Include="Views\Home\Indiv.cshtml" />
+    <Content Include="Views\Home\_Data_home.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,342 @@
+﻿
+@{
+    ViewBag.Title = "Data_home";
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+
+    <script src="~/Scripts/crossfilter.js"></script>
+
+    <script src="~/Scripts/d3.js"></script>
+
+    <script src="~/Scripts/dc.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.js"
+            integrity="sha512-h1Xtd9Xz5HglyzafV0MQ2j9RU30SbD+QdVRJXxdIdMixcGLiljJqtuu1W8Ig20IzYI8lskIKEppDJbF/zkdRtA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.css"
+          integrity="sha512-QmxybGIvkSI8+CGxkt5JAcGOKIzHDqBMs/hdemwisj4EeGLMXxCm9h8YgoCwIvndnuN1NdZxT4pdsesLXSaKaA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style type="text/css">
+        .dc-cbox-group {
+            list-style-type: none;
+            margin-left: 0;
+        }
+
+            .dc-cbox-group label {
+                display: inline;
+            }
+
+            .dc-cbox-group input[type=checkbox],
+            .dc-cbox-group input[type=radio] {
+                display: inline;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!--這是標頭-->
+        <!--<script src="HDRheader.js"></script>-->
+        @*<script src="~/Scripts/HDRheader.js"></script>*@
+        <br>
+        <!--篩選標籤及清除全部篩選器-->
+        <div class="row justify-content-center" style="background-color:#ffffff; margin: 1px 0;">
+            <p style="margin: 5px 0;"><a>搜尋結果共: </a><a id="num_item"></a><a> 筆資料</a></p>
+        </div>
+
+        <div class="row justify-content-center" style="background-color:#ffffff; margin: 1px 0;">
+            <p><button id="clearfileter" type="button" class="btn btn-primary" style="margin: 10px 5px 0px 0px;">清除篩選條件</button></p>
+            <p id="tags"></p>
+        </div>
+
+
+
+
+        <!--分成兩欄左邊是篩選checkbox-->
+        <br><br>
+        <div class="row justify-content-center">
+            <!--左欄空間放篩選器-->
+            <div class="col-md-4">
+                <div class="panel-group" id="accordionExample">
+
+                </div>
+            </div>
+            <!--右欄空間放個資料集摘要-->
+            <div class="col-md-8">
+                <!--資料集結果多筆時可以將資料切成多個頁面顯示-->
+                <div class="pagination-wrapper">
+                    <div id="cards-container">
+                        <!-- cards will be put here by pagination.js -->
+                    </div>
+                    <div id="pagination-container">
+                        <!-- the pagination controls will be put here by pagination.js -->
+                    </div>
+                </div>
+
+
+                <br>
+                <br>
+                <br>
+
+
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    //這邊接收資料
+    d3.csv("../../做人成功.csv").then(function (data) {
+        //將data轉為crossfilter形式以便資料集做交叉查詢
+        var ndx = crossfilter(data);
+        var letterDimension2 = ndx.dimension(function (d) {
+            return d.id;
+        });
+
+        var total_num = document.querySelector('#num_item');
+        //取得資料集筆數
+        total_num.innerHTML = data.length;
+
+        var accor = document.querySelector('#accordionExample');
+        let inhtml = "";
+        let i = 1, j = 0, k = 0;
+
+        /*根據CSV檔前31欄解析階層關係 例如:A$B$C是有三層關係的分類，A$B$C和A$B$D關係如下
+            A->B->C
+                ->D
+          首先判斷這欄用$可以切出幾個階層如果只有一層就不需做巢狀摺疊選單
+          兩層就需要判斷目前在這一項的第一層和下一項的第一層是否為一樣的
+          如果一樣就繼續在第一層內新增項目否則離開
+          三層的話就需要判斷目前在這一項的第二層和下一項的第二層是否為一樣的
+          如果一樣就繼續在第二層內新增項目否則離開回到第一層比較
+        */
+        while (i < 31) {
+
+            if (data.columns[i].split("$").length == 1) {
+                inhtml += `<div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                          <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                              Collapsible Group Item #1
+                            </a>
+                          </h4>
+                        </div>
+                        <h2 class="panel-heading" id="heading`+ i + `">
+                          <a class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse`+ i + `" aria-expanded="false" aria-controls="collapse` + i + `">
+                            `+ data.columns[i].split("$")[0] + `
+                          </a>
+                        </h2>
+                        <div id="collapse`+ i + `" class="accordion-collapse collapse" aria-labelledby="heading` + i + `" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <div id="cbox`+ i + `">
+                            </div>
+                          </div>
+                        </div>
+                      </div>`;
+                i++;
+            }
+
+            else if (data.columns[i].split("$").length == 2) {
+                inhtml += `<div class="panel panel-default">
+                        <h2 class="panel-heading" id="heading`+ i + `">
+                          <a class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse`+ i + `" aria-expanded="false" aria-controls="collapse` + i + `">
+                            `+ data.columns[i].split("$")[0] + `
+                          </a>
+                        </h2>
+                        <div id="collapse`+ i + `" class="accordion-collapse collapse" aria-labelledby="heading` + i + `" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">`;
+                j = i;
+                while (data.columns[j].split("$")[0] == data.columns[i].split("$")[0]) {
+                    inhtml += `<div class="panel panel-default">
+                          <h2 class="panel-heading" id="heading`+ i + `_` + j + `">
+                            <a class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse`+ i + `_` + j + `" aria-expanded="false" aria-controls="collapse` + i + `_` + j + `">
+                              `+ data.columns[j].split("$")[1] + `
+                            </a>
+                          </h2>
+                          <div id="collapse`+ i + `_` + j + `" class="accordion-collapse collapse" aria-labelledby="heading` + i + `_` + j + `" data-bs-parent="#collapse` + i + `">
+                            <div class="accordion-body">
+                              <div id="cbox`+ j + `">
+                              </div>
+                            </div>
+                          </div>
+                        </div>`;
+                    j++;
+                }
+                inhtml += `</div>
+                </div>
+              </div>`;
+                i = j;
+            }
+
+            else {
+                inhtml += `<div class="panel panel-default">
+                        <h2 class="panel-heading" id="heading`+ i + `">
+                          <a class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse`+ i + `" aria-expanded="false" aria-controls="collapse` + i + `">
+                            `+ data.columns[i].split("$")[0] + `
+                          </a>
+                        </h2>
+                        <div id="collapse`+ i + `" class="accordion-collapse collapse" aria-labelledby="heading` + i + `" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">`;
+                j = i;
+                while (data.columns[j].split("$")[0] == data.columns[i].split("$")[0]) {
+
+                    inhtml += `<div class="panel panel-default">
+                          <h2 class="panel-heading" id="heading`+ i + `_` + j + `">
+                            <a class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse`+ i + `_` + j + `" aria-expanded="false" aria-controls="collapse` + i + `_` + j + `">
+                              `+ data.columns[j].split("$")[1] + `
+                            </a>
+                          </h2>
+                          <div id="collapse`+ i + `_` + j + `" class="accordion-collapse collapse" aria-labelledby="heading` + i + `_` + j + `" data-bs-parent="#collapse` + i + `">
+                            <div class="accordion-body">`;
+
+                    k = j;
+                    while (data.columns[k].split("$")[1] == data.columns[j].split("$")[1]) {
+
+                        inhtml += `<div class="panel panel-default">
+                                        <h2 class="panel-heading" id="heading`+ i + `_` + j + `_` + k + `">
+                                          <a class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse`+ i + `_` + j + `_` + k + `" aria-expanded="false" aria-controls="collapse` + i + `_` + j + `_` + k + `">
+                                            `+ data.columns[k].split("$")[2] + `
+                                          </a>
+                                        </h2>
+                                        <div id="collapse`+ i + `_` + j + `_` + k + `" class="accordion-collapse collapse" aria-labelledby="heading` + i + `_` + j + `_` + k + `" data-bs-parent="#collapse` + i + `_` + j + `">
+                                          <div class="accordion-body">
+                                            <div id="cbox`+ k + `">
+                                              </div>
+                                            </div>
+                                          </div>
+                                      </div>`;
+                        k++;
+                    }
+                    j = k;
+                    inhtml += `</div>
+                  </div>
+                </div>`;
+                }
+                inhtml += `</div>
+            </div>
+          </div>`;
+                i = j;
+            }
+        }
+        //串完所有摺疊選單雪項後將字串寫入摺疊選單範圍DIV內accordionExample
+        accor.innerHTML = inhtml;
+
+        //宣告所有選單內的的CBOX選項DC CBOX
+        for (let c = 0; c < 31; c++) {
+            eval("var cbox" + c + "=new dc.CboxMenu('#cbox" + c + "')");
+            eval("var dimension" + c + "= ndx.dimension(function(d){return d." + data.columns[c] + ";})");
+            eval("cbox" + c + ".dimension(dimension" + c + ").group(dimension" + c + ".group()).multiple(true).controlsUseVisibility(true);");
+        }
+
+
+
+        //當視窗載入完成執行SHOWDATA將初始資料顯示在頁面
+        window.onload = Showdata();
+
+
+        function Showdata() {
+            var dd = letterDimension2.top(Infinity);
+
+            var template = function (item) {
+                var temp = '';
+                //將所有符合的資料集都以一張一張的卡片
+                for (var i = 0; i < item.length; i++) {
+                    temp += `<div class="card">
+                    <div class="card-header">
+                      <div class="row">
+                        <div class="col">
+                          <h4><a href="https://localhost:44309/Home/Indiv?id=${item[i].uid}"><label class="f-w-700">${item[i].資料集標題}</label></a></h4>
+                          <img src="${item[i].認證徽章}" width="10%"><a>${item[i].資料集來源}</a>
+                        </div>
+                        <div class="col" style="text-align:right;">
+                          <img src="${item[i].來源單位Logo}" width="10%">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body text-dark">
+                        <span class="badge text-bg-secondary">${item[i].資料集Tag}</span>
+                        <p>${item[i].摘要Abstract}</p>
+                    </div>
+                  </div><br>`;
+                }
+                return temp;
+            }
+
+
+
+
+            total_num.innerHTML = dd.length;
+            //串完後PAGINATION會依照上方TEMPLATE的樣板做切割以下列情況每10筆會變成一頁
+            var $cardsContainer = $('#cards-container');
+            $('#pagination-container').pagination({
+                dataSource: dd,
+                pageSize: 10,
+                showPrevious: false,
+                showNext: false,
+                callback: function (e, pagination) {
+                    $cardsContainer.html(template(e));
+                }
+            })
+
+            dc.renderAll();
+
+        }
+
+        dc.renderAll();
+
+
+        var tag_area = document.querySelector('#tags');
+        //當清除篩選器按點擊時將標籤全部清除後把所有的INPUT TYPE=CHECKBOX的勾選狀態改為位勾選
+        $(document).on('click', "#clearfileter", function (e) {
+            tag_area.innerHTML = "";
+            $("input[type='checkbox']").prop('checked', false);
+            //宣告的CBOX交叉篩選器條件全部清除
+            for (let c = 0; c < 31; c++) {
+                eval("cbox" + c + ".filterAll()");
+            }
+            //重新載入符合條件的資料集
+            Showdata();
+        });
+
+        //當CBOX選項被勾選的時候更新標籤
+        $(document).on('change', "input[type='checkbox']", function (e) {
+            tag_area.innerHTML = "";
+
+            $("input[type='checkbox']").each(function () {
+                var sThisVal = (this.checked ? $("#tags").prepend(`<span class="badge text-bg-secondary">` + $(this).val() + `</span> `) : "");
+            });
+            //重新載入符合條件的資料集
+            Showdata();
+        });
+
+        $(document).on('click', "input[type='reset']", function (e) {
+            tag_area.innerHTML = "";
+
+            $("input[type='checkbox']").each(function () {
+                var sThisVal = (this.checked ? $("#tags").prepend(`<span class="badge text-bg-secondary">` + $(this).val() + `</span> `) : "");
+            });
+            //重新載入符合條件的資料集
+            Showdata();
+        });
+
+    });
+
+</script>
+</html>

@@ -26,5 +26,19 @@ namespace NHRI.Controllers
 
             return View();
         }
+        public ActionResult Data_home()
+        {
+            return View();
+        }
+
+        public ActionResult _Data_home()
+        {
+            return View();
+        }
+
+        public ActionResult Indiv()
+        {
+            return View();
+        }
     }
 }
